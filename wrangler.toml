@@ -1,12 +1,9 @@
 name = "cnzrfrmwrkweb"
 compatibility_date = "2024-12-23"
-pages_build_output_dir = "public"
 
-[build]
-command = "npm run build"
-
-[build.upload]
-format = "service-worker"
+# This tells Wrangler to upload your built frontend files
+[assets]
+directory = "./public" 
 
 # Environment variables
 [vars]
