@@ -9,6 +9,3 @@ directory = "./dist"
 [vars]
 NODE_ENV = "production"
 
-routes = [
-  { pattern = "cnzr.biz.id", custom_domain = true }
-]
