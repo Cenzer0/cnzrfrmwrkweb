@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'API Playground - CNZR' %></title>
+  <meta name="description" content="Test CNZR Framework APIs in real-time">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/output.css" as="style">
+  <link rel="preload" href="/app-motion.js" as="script">
+  
+  <link rel="stylesheet" href="/output.css">
+</head>
+<body class="scanline overflow-x-hidden">
+  
+  <!-- Animated Background -->
+  <div class="fixed inset-0 -z-10">
+    <div class="absolute inset-0 bg-gradient-to-br from-pixel-bg via-pixel-dark to-pixel-bg"></div>
+    <div class="absolute top-40 right-20 w-32 h-32 bg-pixel-yellow/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-40 left-1/4 w-48 h-48 bg-pixel-cyan/5 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-50 backdrop-blur-md bg-pixel-dark/80 border-b border-pixel-cyan/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <!-- Logo -->
+        <a href="/" class="group flex items-center space-x-4">
+          <div class="relative">
+            <div class="absolute inset-0 bg-pixel-cyan/20 blur-xl group-hover:bg-pixel-yellow/20 transition-all duration-300"></div>
+            <span class="relative text-3xl font-bold text-pixel-cyan group-hover:text-pixel-yellow transition-all duration-300 text-glow">
+              CNZR
+            </span>
+          </div>
+          <span class="hidden sm:inline text-xs text-pixel-gray border border-pixel-gray/30 px-2 py-1 rounded">v2.5.2</span>
+        </a>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="/" class="text-sm font-semibold text-pixel-white hover:text-pixel-cyan transition-colors duration-300">Home</a>
+          <a href="/docs" class="text-sm font-semibold text-pixel-white hover:text-pixel-cyan transition-colors duration-300">Documentation</a>
+          <a href="/playground" class="text-sm font-semibold text-pixel-cyan">Playground</a>
+          <a href="https://github.com/CenZero/cnzr" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-sm font-semibold text-pixel-white hover:text-pixel-cyan transition-colors duration-300">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-4 py-12">
+    
+    <!-- Header -->
+    <div class="mb-16 text-center animate-on-scroll">
+      <h1 class="text-5xl md:text-6xl font-bold mb-4">
+        <span class="gradient-text text-glow">API Playground</span>
+      </h1>
+      <p class="text-xl text-pixel-gray max-w-2xl mx-auto">
+        Test and explore CNZR Framework APIs in real-time
+      </p>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-8">
+      
+      <!-- Request Panel -->
+      <div class="space-y-6">
+        <div class="card-pixel p-6 animate-on-scroll">
+          <h2 class="text-2xl font-bold text-pixel-cyan mb-6 flex items-center gap-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+            </svg>
+            Request
+          </h2>
+          
+          <!-- Method & URL -->
+          <div class="space-y-4 mb-6">
+            <div>
+              <label class="block text-sm font-semibold text-pixel-white mb-2">Method</label>
+              <select id="method" onchange="updateMethodColor()" class="w-full bg-pixel-dark border-2 border-pixel-gray/30 text-pixel-white px-4 py-3 rounded focus:border-pixel-cyan focus:outline-none transition-colors">
+                <option value="GET">GET</option>
+                <option value="POST">POST</option>
+                <option value="PUT">PUT</option>
+                <option value="PATCH">PATCH</option>
+                <option value="DELETE">DELETE</option>
+              </select>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-semibold text-pixel-white mb-2">Endpoint</label>
+              <input id="endpoint" type="text" value="/health" class="w-full bg-pixel-dark border-2 border-pixel-gray/30 text-pixel-white px-4 py-3 rounded focus:border-pixel-cyan focus:outline-none transition-colors font-mono" placeholder="/api/endpoint">
+            </div>
+          </div>
+          
+          <!-- Headers -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-pixel-white mb-2">Headers (Optional)</label>
+            <textarea id="headers" rows="4" class="w-full bg-pixel-dark border-2 border-pixel-gray/30 text-pixel-lime px-4 py-3 rounded font-mono text-sm focus:border-pixel-cyan focus:outline-none transition-colors" placeholder='{\n  "Authorization": "Bearer token",\n  "Custom-Header": "value"\n}'></textarea>
+          </div>
+          
+          <!-- Request Body -->
+          <div class="mb-6">
+            <label class="block text-sm font-semibold text-pixel-white mb-2">Request Body (JSON)</label>
+            <textarea id="requestBody" rows="8" class="w-full bg-pixel-dark border-2 border-pixel-gray/30 text-pixel-lime px-4 py-3 rounded font-mono text-sm focus:border-pixel-cyan focus:outline-none transition-colors" placeholder='{\n  "name": "Developer",\n  "message": "Great framework!"\n}'></textarea>
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="grid grid-cols-2 gap-4">
+            <button onclick="sendRequest()" class="btn-pixel hover-lift">
+              Send Request
+            </button>
+            <button onclick="generateCurl()" class="btn-pixel-outline hover-lift">
+              Generate cURL
+            </button>
+          </div>
+          
+          <!-- Save/Load Buttons -->
+          <div class="grid grid-cols-2 gap-4 mt-4">
+            <button onclick="saveRequest()" class="text-sm px-4 py-2 bg-pixel-dark border border-pixel-cyan/30 text-pixel-cyan rounded hover:bg-pixel-cyan/10 transition-colors">
+              💾 Save Request
+            </button>
+            <button onclick="showSavedRequests()" class="text-sm px-4 py-2 bg-pixel-dark border border-pixel-yellow/30 text-pixel-yellow rounded hover:bg-pixel-yellow/10 transition-colors">
+              📂 Load Saved
+            </button>
+          </div>
+        </div>
+        
+        <!-- Quick Examples -->
+        <div class="card-pixel p-6 animate-on-scroll">
+          <h3 class="text-lg font-bold text-pixel-yellow mb-4">Quick Examples</h3>
+          <div class="space-y-2">
+            <button onclick="loadExample('health')" class="w-full text-left px-4 py-3 bg-pixel-dark/50 hover:bg-pixel-dark border border-pixel-gray/30 hover:border-pixel-cyan/50 rounded text-sm text-pixel-white transition-all flex items-center justify-between group">
+              <span>Health Check</span>
+              <span class="text-xs text-pixel-cyan opacity-0 group-hover:opacity-100 transition-opacity">GET</span>
+            </button>
+            <button onclick="loadExample('stats')" class="w-full text-left px-4 py-3 bg-pixel-dark/50 hover:bg-pixel-dark border border-pixel-gray/30 hover:border-pixel-cyan/50 rounded text-sm text-pixel-white transition-all flex items-center justify-between group">
+              <span>Get Stats</span>
+              <span class="text-xs text-pixel-cyan opacity-0 group-hover:opacity-100 transition-opacity">GET</span>
+            </button>
+            <button onclick="loadExample('features')" class="w-full text-left px-4 py-3 bg-pixel-dark/50 hover:bg-pixel-dark border border-pixel-gray/30 hover:border-pixel-cyan/50 rounded text-sm text-pixel-white transition-all flex items-center justify-between group">
+              <span>List Features</span>
+              <span class="text-xs text-pixel-cyan opacity-0 group-hover:opacity-100 transition-opacity">GET</span>
+            </button>
+            <button onclick="loadExample('feedback')" class="w-full text-left px-4 py-3 bg-pixel-dark/50 hover:bg-pixel-dark border border-pixel-gray/30 hover:border-pixel-yellow/50 rounded text-sm text-pixel-white transition-all flex items-center justify-between group">
+              <span>Send Feedback</span>
+              <span class="text-xs text-pixel-yellow opacity-0 group-hover:opacity-100 transition-opacity">POST</span>
+            </button>
+          </div>
+        </div>
+        
+        <!-- Request History -->
+        <div class="card-pixel p-6 animate-on-scroll">
+          <h3 class="text-lg font-bold text-pixel-pink mb-4 flex items-center justify-between">
+            <span>Request History</span>
+            <button onclick="clearHistory()" class="text-xs text-pixel-gray hover:text-pixel-pink transition-colors">Clear</button>
+          </h3>
+          <div id="history" class="space-y-2 max-h-64 overflow-y-auto">
+            <p class="text-sm text-pixel-gray text-center py-4">No requests yet</p>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Response Panel -->
+      <div class="space-y-6">
+        <div class="card-pixel p-6 animate-on-scroll">
+          <h2 class="text-2xl font-bold text-pixel-pink mb-6 flex items-center gap-3">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+            Response
+          </h2>
+          
+          <!-- Status -->
+          <div class="mb-6">
+            <div class="grid grid-cols-3 gap-4">
+              <div>
+                <span class="text-xs text-pixel-gray block mb-1">Status</span>
+                <span id="statusCode" class="px-3 py-2 bg-pixel-gray/20 text-pixel-gray rounded text-sm block text-center">-</span>
+              </div>
+              <div>
+                <span class="text-xs text-pixel-gray block mb-1">Time</span>
+                <span id="responseTime" class="text-pixel-gray text-sm block text-center py-2">-</span>
+              </div>
+              <div>
+                <span class="text-xs text-pixel-gray block mb-1">Size</span>
+                <span id="responseSize" class="text-pixel-gray text-sm block text-center py-2">-</span>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Response Tabs -->
+          <div class="mb-4">
+            <div class="flex gap-2 border-b border-pixel-gray/30">
+              <button onclick="switchTab('body')" id="tab-body" class="px-4 py-2 text-sm font-semibold text-pixel-cyan border-b-2 border-pixel-cyan">Body</button>
+              <button onclick="switchTab('headers')" id="tab-headers" class="px-4 py-2 text-sm font-semibold text-pixel-gray border-b-2 border-transparent hover:text-pixel-white transition-colors">Headers</button>
+            </div>
+          </div>
+          
+          <!-- Response Body -->
+          <div class="mb-4" id="response-body-container">
+            <label class="block text-sm font-semibold text-pixel-white mb-2">Response Body</label>
+            <div class="terminal">
+              <div class="bg-pixel-dark/80 px-6 py-4 border-b border-pixel-gray/30 flex items-center justify-between">
+                <span class="text-xs text-pixel-gray font-mono">response.json</span>
+                <button onclick="copyResponse()" class="text-xs text-pixel-cyan hover:text-pixel-yellow transition-colors">Copy</button>
+              </div>
+              <div class="p-6 overflow-x-auto max-h-96">
+                <pre id="responseBody" class="text-sm text-pixel-lime font-mono">No response yet. Send a request to see the response.</pre>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Response Headers -->
+          <div class="mb-4 hidden" id="response-headers-container">
+            <label class="block text-sm font-semibold text-pixel-white mb-2">Response Headers</label>
+            <div class="terminal">
+              <div class="bg-pixel-dark/80 px-6 py-4 border-b border-pixel-gray/30">
+                <span class="text-xs text-pixel-gray font-mono">headers</span>
+              </div>
+              <div class="p-6 overflow-x-auto max-h-96">
+                <pre id="responseHeaders" class="text-sm text-pixel-cyan font-mono">No headers yet</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Available Endpoints -->
+        <div class="card-pixel p-6 animate-on-scroll">
+          <h3 class="text-lg font-bold text-pixel-yellow mb-4">Available Endpoints</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex items-start gap-3 p-3 bg-pixel-dark/30 rounded">
+              <span class="px-2 py-1 bg-pixel-cyan/20 text-pixel-cyan rounded text-xs font-bold">GET</span>
+              <div class="flex-1">
+                <code class="text-pixel-white">/health</code>
+                <p class="text-pixel-gray text-xs mt-1">Server health check</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 bg-pixel-dark/30 rounded">
+              <span class="px-2 py-1 bg-pixel-cyan/20 text-pixel-cyan rounded text-xs font-bold">GET</span>
+              <div class="flex-1">
+                <code class="text-pixel-white">/api/stats</code>
+                <p class="text-pixel-gray text-xs mt-1">Framework statistics</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 bg-pixel-dark/30 rounded">
+              <span class="px-2 py-1 bg-pixel-cyan/20 text-pixel-cyan rounded text-xs font-bold">GET</span>
+              <div class="flex-1">
+                <code class="text-pixel-white">/api/features</code>
+                <p class="text-pixel-gray text-xs mt-1">List all features</p>
+              </div>
+            </div>
+            <div class="flex items-start gap-3 p-3 bg-pixel-dark/30 rounded">
+              <span class="px-2 py-1 bg-pixel-yellow/20 text-pixel-yellow rounded text-xs font-bold">POST</span>
+              <div class="flex-1">
+                <code class="text-pixel-white">/api/feedback</code>
+                <p class="text-pixel-gray text-xs mt-1">Submit feedback</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-pixel-cyan/10 py-16 px-4 mt-20">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-12 mb-12">
+        <div>
+          <div class="text-3xl font-bold text-pixel-cyan text-glow mb-4">CNZR</div>
+          <p class="text-sm text-pixel-gray leading-relaxed">
+            Modern Node.js framework for building exceptional web applications
+          </p>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-pixel-white mb-4 uppercase tracking-wider text-sm">Resources</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="/docs" class="text-pixel-gray hover:text-pixel-cyan transition-colors">Documentation</a></li>
+            <li><a href="/playground" class="text-pixel-gray hover:text-pixel-cyan transition-colors">Playground</a></li>
+            <li><a href="https://github.com/CenZero/cnzr" class="text-pixel-gray hover:text-pixel-cyan transition-colors">GitHub</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-pixel-white mb-4 uppercase tracking-wider text-sm">Community</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="/community" class="text-pixel-gray hover:text-pixel-cyan transition-colors">Join Community</a></li>
+            <li><a href="https://github.com/CenZero/cnzr/discussions" target="_blank" rel="noopener noreferrer" class="text-pixel-gray hover:text-pixel-cyan transition-colors">Discussions</a></li>
+            <li><a href="https://github.com/CenZero/cnzr" target="_blank" rel="noopener noreferrer" class="text-pixel-gray hover:text-pixel-cyan transition-colors">GitHub</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-pixel-white mb-4 uppercase tracking-wider text-sm">Legal</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="https://github.com/CenZero/cnzr/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="text-pixel-gray hover:text-pixel-cyan transition-colors">MIT License</a></li>
+            <li><a href="/privacy" class="text-pixel-gray hover:text-pixel-cyan transition-colors">Privacy Policy</a></li>
+            <li><a href="/terms" class="text-pixel-gray hover:text-pixel-cyan transition-colors">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-pixel-gray/20 pt-8 text-center">
+        <p class="text-sm text-pixel-gray flex items-center justify-center gap-2">
+          © 2024 CNZR Framework. Built with 
+          <svg class="w-4 h-4 text-pixel-pink" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+          </svg>
+          by Muhammad Falih Afiq
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/app-motion.js" defer></script>
+  <script>
+    // Request history storage
+    let requestHistory = [];
+    let savedRequests = JSON.parse(localStorage.getItem('cnzr_saved_requests') || '[]');
+    
+    // Load history from localStorage on page load
+    function loadHistoryFromStorage() {
+      const stored = localStorage.getItem('cnzr_request_history');
+      if (stored) {
+        requestHistory = JSON.parse(stored);
+        renderHistory();
+      }
+    }
+    
+    // Save history to localStorage
+    function saveHistoryToStorage() {
+      localStorage.setItem('cnzr_request_history', JSON.stringify(requestHistory));
+    }
+    
+    // Tab switching
+    function switchTab(tab) {
+      document.getElementById('tab-body').classList.remove('text-pixel-cyan', 'border-pixel-cyan');
+      document.getElementById('tab-body').classList.add('text-pixel-gray', 'border-transparent');
+      document.getElementById('tab-headers').classList.remove('text-pixel-cyan', 'border-pixel-cyan');
+      document.getElementById('tab-headers').classList.add('text-pixel-gray', 'border-transparent');
+      
+      if (tab === 'body') {
+        document.getElementById('tab-body').classList.add('text-pixel-cyan', 'border-pixel-cyan');
+        document.getElementById('response-body-container').classList.remove('hidden');
+        document.getElementById('response-headers-container').classList.add('hidden');
+      } else {
+        document.getElementById('tab-headers').classList.add('text-pixel-cyan', 'border-pixel-cyan');
+        document.getElementById('response-body-container').classList.add('hidden');
+        document.getElementById('response-headers-container').classList.remove('hidden');
+      }
+    }
+    
+    // Update method color
+    function updateMethodColor() {
+      const method = document.getElementById('method').value;
+      const select = document.getElementById('method');
+      select.className = 'w-full bg-pixel-dark border-2 text-pixel-white px-4 py-3 rounded focus:outline-none transition-colors ';
+      
+      if (method === 'GET') select.className += 'border-pixel-cyan/30 focus:border-pixel-cyan';
+      else if (method === 'POST') select.className += 'border-pixel-yellow/30 focus:border-pixel-yellow';
+      else if (method === 'PUT') select.className += 'border-pixel-pink/30 focus:border-pixel-pink';
+      else if (method === 'PATCH') select.className += 'border-pixel-lime/30 focus:border-pixel-lime';
+      else select.className += 'border-pixel-gray/30 focus:border-pixel-gray';
+    }
+    
+    // Load example
+    function loadExample(type) {
+      const examples = {
+        health: {
+          method: 'GET',
+          endpoint: '/health',
+          headers: '',
+          body: ''
+        },
+        stats: {
+          method: 'GET',
+          endpoint: '/api/stats',
+          headers: '',
+          body: ''
+        },
+        features: {
+          method: 'GET',
+          endpoint: '/api/features',
+          headers: '',
+          body: ''
+        },
+        feedback: {
+          method: 'POST',
+          endpoint: '/api/feedback',
+          headers: JSON.stringify({
+            "Content-Type": "application/json"
+          }, null, 2),
+          body: JSON.stringify({
+            name: "Developer",
+            message: "Great framework!"
+          }, null, 2)
+        }
+      };
+      
+      const example = examples[type];
+      document.getElementById('method').value = example.method;
+      document.getElementById('endpoint').value = example.endpoint;
+      document.getElementById('headers').value = example.headers;
+      document.getElementById('requestBody').value = example.body;
+      updateMethodColor();
+    }
+    
+    // Send request
+    async function sendRequest() {
+      const method = document.getElementById('method').value;
+      const endpoint = document.getElementById('endpoint').value;
+      const headersText = document.getElementById('headers').value;
+      const body = document.getElementById('requestBody').value;
+      
+      const startTime = Date.now();
+      
+      try {
+        const options = {
+          method: method,
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        };
+        
+        // Parse custom headers
+        if (headersText.trim()) {
+          try {
+            const customHeaders = JSON.parse(headersText);
+            Object.assign(options.headers, customHeaders);
+          } catch (e) {
+            showToast('Invalid headers JSON', 'error');
+            return;
+          }
+        }
+        
+        if (body && method !== 'GET') {
+          options.body = body;
+        }
+        
+        const response = await fetch(endpoint, options);
+        const data = await response.json();
+        const endTime = Date.now();
+        const duration = endTime - startTime;
+        
+        // Calculate response size
+        const size = new Blob([JSON.stringify(data)]).size;
+        const sizeText = size < 1024 ? `${size} B` : `${(size / 1024).toFixed(2)} KB`;
+        
+        // Update status
+        const statusEl = document.getElementById('statusCode');
+        statusEl.textContent = response.status;
+        statusEl.className = `px-3 py-2 rounded text-sm block text-center ${
+          response.ok ? 'bg-pixel-lime/20 text-pixel-lime' : 'bg-pixel-pink/20 text-pixel-pink'
+        }`;
+        
+        // Update time and size
+        document.getElementById('responseTime').textContent = `${duration}ms`;
+        document.getElementById('responseSize').textContent = sizeText;
+        
+        // Update response body
+        document.getElementById('responseBody').textContent = JSON.stringify(data, null, 2);
+        
+        // Update response headers
+        const headersObj = {};
+        response.headers.forEach((value, key) => {
+          headersObj[key] = value;
+        });
+        document.getElementById('responseHeaders').textContent = JSON.stringify(headersObj, null, 2);
+        
+        // Add to history
+        addToHistory(method, endpoint, response.status, duration);
+        
+        showToast('Request completed successfully', 'success');
+        
+      } catch (error) {
+        document.getElementById('statusCode').textContent = 'Error';
+        document.getElementById('statusCode').className = 'px-3 py-2 bg-pixel-pink/20 text-pixel-pink rounded text-sm block text-center';
+        document.getElementById('responseBody').textContent = `Error: ${error.message}`;
+        showToast(`Error: ${error.message}`, 'error');
+      }
+    }
+    
+    // Add to history
+    function addToHistory(method, endpoint, status, duration) {
+      const timestamp = new Date().toLocaleTimeString();
+      requestHistory.unshift({ method, endpoint, status, duration, timestamp });
+      
+      if (requestHistory.length > 10) {
+        requestHistory = requestHistory.slice(0, 10);
+      }
+      
+      saveHistoryToStorage();
+      renderHistory();
+    }
+    
+    // Render history
+    function renderHistory() {
+      const historyEl = document.getElementById('history');
+      
+      if (requestHistory.length === 0) {
+        historyEl.innerHTML = '<p class="text-sm text-pixel-gray text-center py-4">No requests yet</p>';
+        return;
+      }
+      
+      historyEl.innerHTML = requestHistory.map(item => {
+        const statusColor = item.status < 400 ? 'text-pixel-lime' : 'text-pixel-pink';
+        const methodColor = item.method === 'GET' ? 'text-pixel-cyan' : 'text-pixel-yellow';
+        
+        return `
+          <div class="p-3 bg-pixel-dark/30 rounded text-xs hover:bg-pixel-dark/50 transition-colors cursor-pointer" onclick="loadFromHistory('${item.endpoint}', '${item.method}')">
+            <div class="flex items-center justify-between mb-1">
+              <span class="${methodColor} font-bold">${item.method}</span>
+              <span class="${statusColor}">${item.status}</span>
+            </div>
+            <div class="text-pixel-gray truncate">${item.endpoint}</div>
+            <div class="text-pixel-gray/60 mt-1">${item.timestamp} • ${item.duration}ms</div>
+          </div>
+        `;
+      }).join('');
+    }
+    
+    // Load from history
+    function loadFromHistory(endpoint, method) {
+      document.getElementById('endpoint').value = endpoint;
+      document.getElementById('method').value = method;
+      updateMethodColor();
+    }
+    
+    // Clear history
+    function clearHistory() {
+      requestHistory = [];
+      saveHistoryToStorage();
+      renderHistory();
+      showToast('History cleared', 'success');
+    }
+    
+    // Save request
+    function saveRequest() {
+      const name = prompt('Enter a name for this request:');
+      if (!name) return;
+      
+      const request = {
+        id: Date.now(),
+        name: name,
+        method: document.getElementById('method').value,
+        endpoint: document.getElementById('endpoint').value,
+        headers: document.getElementById('headers').value,
+        body: document.getElementById('requestBody').value,
+        savedAt: new Date().toLocaleString()
+      };
+      
+      savedRequests.push(request);
+      localStorage.setItem('cnzr_saved_requests', JSON.stringify(savedRequests));
+      showToast(`Request "${name}" saved!`, 'success');
+    }
+    
+    // Show saved requests
+    function showSavedRequests() {
+      if (savedRequests.length === 0) {
+        showToast('No saved requests', 'error');
+        return;
+      }
+      
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4';
+      modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+      
+      const content = document.createElement('div');
+      content.className = 'card-pixel p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto';
+      content.onclick = (e) => e.stopPropagation();
+      
+      content.innerHTML = `
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-2xl font-bold text-pixel-cyan">Saved Requests</h3>
+          <button onclick="this.closest('.fixed').remove()" class="text-pixel-gray hover:text-pixel-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+        <div class="space-y-3">
+          ${savedRequests.map(req => `
+            <div class="p-4 bg-pixel-dark/50 rounded border border-pixel-gray/30 hover:border-pixel-cyan/50 transition-colors">
+              <div class="flex items-start justify-between mb-2">
+                <div class="flex-1">
+                  <h4 class="font-bold text-pixel-white mb-1">${req.name}</h4>
+                  <div class="flex items-center gap-2 text-xs">
+                    <span class="px-2 py-1 bg-pixel-cyan/20 text-pixel-cyan rounded">${req.method}</span>
+                    <span class="text-pixel-gray">${req.endpoint}</span>
+                  </div>
+                  <p class="text-xs text-pixel-gray/60 mt-1">Saved: ${req.savedAt}</p>
+                </div>
+                <div class="flex gap-2">
+                  <button onclick="loadSavedRequest(${req.id}); this.closest('.fixed').remove();" class="px-3 py-1 bg-pixel-cyan/20 text-pixel-cyan rounded text-xs hover:bg-pixel-cyan/30 transition-colors">
+                    Load
+                  </button>
+                  <button onclick="deleteSavedRequest(${req.id}); this.closest('.fixed').remove(); showSavedRequests();" class="px-3 py-1 bg-pixel-pink/20 text-pixel-pink rounded text-xs hover:bg-pixel-pink/30 transition-colors">
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+    }
+    
+    // Load saved request
+    function loadSavedRequest(id) {
+      const request = savedRequests.find(r => r.id === id);
+      if (!request) return;
+      
+      document.getElementById('method').value = request.method;
+      document.getElementById('endpoint').value = request.endpoint;
+      document.getElementById('headers').value = request.headers;
+      document.getElementById('requestBody').value = request.body;
+      updateMethodColor();
+      showToast(`Loaded "${request.name}"`, 'success');
+    }
+    
+    // Delete saved request
+    function deleteSavedRequest(id) {
+      savedRequests = savedRequests.filter(r => r.id !== id);
+      localStorage.setItem('cnzr_saved_requests', JSON.stringify(savedRequests));
+      showToast('Request deleted', 'success');
+    }
+    
+    // Generate cURL command
+    function generateCurl() {
+      const method = document.getElementById('method').value;
+      const endpoint = document.getElementById('endpoint').value;
+      const headersText = document.getElementById('headers').value;
+      const body = document.getElementById('requestBody').value;
+      
+      const baseUrl = window.location.origin;
+      let curl = `curl -X ${method} "${baseUrl}${endpoint}"`;
+      
+      // Add headers
+      curl += ` \\\n  -H "Content-Type: application/json"`;
+      
+      if (headersText.trim()) {
+        try {
+          const headers = JSON.parse(headersText);
+          Object.entries(headers).forEach(([key, value]) => {
+            curl += ` \\\n  -H "${key}: ${value}"`;
+          });
+        } catch (e) {
+          showToast('Invalid headers JSON', 'error');
+          return;
+        }
+      }
+      
+      // Add body
+      if (body && method !== 'GET') {
+        const escapedBody = body.replace(/"/g, '\\"').replace(/\n/g, '');
+        curl += ` \\\n  -d "${escapedBody}"`;
+      }
+      
+      // Show modal with cURL command
+      const modal = document.createElement('div');
+      modal.className = 'fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4';
+      modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+      
+      const content = document.createElement('div');
+      content.className = 'card-pixel p-6 max-w-3xl w-full';
+      content.onclick = (e) => e.stopPropagation();
+      
+      content.innerHTML = `
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-2xl font-bold text-pixel-cyan">cURL Command</h3>
+          <button onclick="this.closest('.fixed').remove()" class="text-pixel-gray hover:text-pixel-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+        <div class="terminal">
+          <div class="bg-pixel-dark/80 px-6 py-4 border-b border-pixel-gray/30 flex items-center justify-between">
+            <span class="text-xs text-pixel-gray font-mono">curl</span>
+            <button onclick="copyCurl()" class="text-xs text-pixel-cyan hover:text-pixel-yellow transition-colors">Copy</button>
+          </div>
+          <div class="p-6 overflow-x-auto">
+            <pre id="curlCommand" class="text-sm text-pixel-lime font-mono whitespace-pre-wrap">${curl}</pre>
+          </div>
+        </div>
+        <p class="text-xs text-pixel-gray mt-4">Copy this command and run it in your terminal</p>
+      `;
+      
+      modal.appendChild(content);
+      document.body.appendChild(modal);
+    }
+    
+    // Copy cURL command
+    function copyCurl() {
+      const curlText = document.getElementById('curlCommand').textContent;
+      navigator.clipboard.writeText(curlText).then(() => {
+        showToast('cURL command copied!', 'success');
+      });
+    }
+    
+    // Clear history
+    function clearHistory() {
+      requestHistory = [];
+      renderHistory();
+      showToast('History cleared', 'success');
+    }
+    
+    // Copy response
+    function copyResponse() {
+      const responseText = document.getElementById('responseBody').textContent;
+      navigator.clipboard.writeText(responseText).then(() => {
+        showToast('Response copied to clipboard!', 'success');
+      });
+    }
+    
+    // Show toast
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      const bgColor = type === 'success' ? 'bg-pixel-cyan' : 'bg-pixel-pink';
+      toast.className = `fixed bottom-4 right-4 ${bgColor} text-pixel-dark px-6 py-3 rounded-lg font-semibold shadow-lg z-50`;
+      toast.textContent = message;
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(20px)';
+      toast.style.transition = 'all 0.3s ease';
+      document.body.appendChild(toast);
+      
+      requestAnimationFrame(() => {
+        toast.style.opacity = '1';
+        toast.style.transform = 'translateY(0)';
+      });
+      
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(20px)';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+    
+    // Load default example on page load
+    document.addEventListener('DOMContentLoaded', () => {
+      loadExample('health');
+      updateMethodColor();
+      loadHistoryFromStorage();
+    });
+  </script>
+</body>
+</html>

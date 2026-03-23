@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title || 'Documentation - CNZR' %></title>
+  <meta name="description" content="Complete guide to CNZR Framework">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  
+  <!-- Preload critical assets -->
+  <link rel="preload" href="/output.css" as="style">
+  <link rel="preload" href="/app-motion.js" as="script">
+  
+  <link rel="stylesheet" href="/output.css">
+</head>
+<body class="scanline overflow-x-hidden">
+  
+  <!-- Animated Background -->
+  <div class="fixed inset-0 -z-10">
+    <div class="absolute inset-0 bg-gradient-to-br from-pixel-bg via-pixel-dark to-pixel-bg"></div>
+    <div class="absolute top-40 right-20 w-32 h-32 bg-pixel-cyan/5 rounded-full blur-3xl"></div>
+    <div class="absolute bottom-40 left-1/4 w-48 h-48 bg-pixel-pink/5 rounded-full blur-3xl"></div>
+  </div>
+
+  <!-- Navigation -->
+  <nav class="sticky top-0 z-50 backdrop-blur-md bg-pixel-dark/80 border-b border-pixel-cyan/20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-20">
+        <!-- Logo -->
+        <a href="/" class="group flex items-center space-x-4">
+          <div class="relative">
+            <div class="absolute inset-0 bg-pixel-cyan/20 blur-xl group-hover:bg-pixel-yellow/20 transition-all duration-300"></div>
+            <span class="relative text-3xl font-bold text-pixel-cyan group-hover:text-pixel-yellow transition-all duration-300 text-glow">
+              CNZR
+            </span>
+          </div>
+          <span class="hidden sm:inline text-xs text-pixel-gray border border-pixel-gray/30 px-2 py-1 rounded">v2.5.2</span>
+        </a>
+        
+        <!-- Desktop Menu -->
+        <div class="hidden md:flex items-center space-x-8">
+          <a href="/" class="text-sm font-semibold text-pixel-white hover:text-pixel-cyan transition-colors duration-300">Home</a>
+          <a href="/docs" class="text-sm font-semibold text-pixel-cyan">Documentation</a>
+          <a href="/playground" class="text-sm font-semibold text-pixel-white hover:text-pixel-cyan transition-colors duration-300">Playground</a>
+          <a href="https://github.com/CenZero/cnzr" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 text-sm font-semibold text-pixel-white hover:text-pixel-cyan transition-colors duration-300">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/></svg>
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-7xl mx-auto px-4 py-12">
+    <div class="flex gap-8">
+      
+      <!-- Sidebar -->
+      <aside class="hidden lg:block w-64 flex-shrink-0">
+        <div class="sticky top-28 card-pixel p-6">
+          <h3 class="text-sm font-bold text-pixel-cyan mb-4 uppercase tracking-wider">Contents</h3>
+          <nav class="space-y-2">
+            <a href="#installation" class="block text-sm text-pixel-white hover:text-pixel-cyan transition-colors py-2 border-l-2 border-transparent hover:border-pixel-cyan pl-3">Installation</a>
+            <a href="#quickstart" class="block text-sm text-pixel-white hover:text-pixel-cyan transition-colors py-2 border-l-2 border-transparent hover:border-pixel-cyan pl-3">Quick Start</a>
+            <a href="#routing" class="block text-sm text-pixel-white hover:text-pixel-cyan transition-colors py-2 border-l-2 border-transparent hover:border-pixel-cyan pl-3">Routing</a>
+            <a href="#context" class="block text-sm text-pixel-white hover:text-pixel-cyan transition-colors py-2 border-l-2 border-transparent hover:border-pixel-cyan pl-3">Context API</a>
+            <a href="#middleware" class="block text-sm text-pixel-white hover:text-pixel-cyan transition-colors py-2 border-l-2 border-transparent hover:border-pixel-cyan pl-3">Middleware</a>
+            <a href="#plugins" class="block text-sm text-pixel-white hover:text-pixel-cyan transition-colors py-2 border-l-2 border-transparent hover:border-pixel-cyan pl-3">Plugins</a>
+            <a href="#session" class="block text-sm text-pixel-white hover:text-pixel-cyan transition-colors py-2 border-l-2 border-transparent hover:border-pixel-cyan pl-3">Session & Cookies</a>
+            <a href="#error" class="block text-sm text-pixel-white hover:text-pixel-cyan transition-colors py-2 border-l-2 border-transparent hover:border-pixel-cyan pl-3">Error Handling</a>
+            <a href="#cli" class="block text-sm text-pixel-white hover:text-pixel-cyan transition-colors py-2 border-l-2 border-transparent hover:border-pixel-cyan pl-3">CLI Commands</a>
+          </nav>
+        </div>
+      </aside>
+
+      <!-- Main Content -->
+      <main class="flex-1 min-w-0">
+        
+        <div class="mb-16 animate-on-scroll">
+          <h1 class="text-5xl md:text-6xl font-bold mb-4">
+            <span class="gradient-text text-glow">Documentation</span>
+          </h1>
+          <p class="text-xl text-pixel-gray">Complete guide to building with CNZR Framework</p>
+        </div>
+
+        <!-- Installation -->
+        <section id="installation" class="mb-20 animate-on-scroll">
+          <h2 class="text-3xl font-bold text-pixel-cyan mb-6 flex items-center gap-3">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+            </svg>
+            Installation
+          </h2>
+          
+          <div class="space-y-6">
+            <div class="card-pixel p-6 hover-lift">
+              <h3 class="text-lg font-bold text-pixel-yellow mb-3">Quick Start</h3>
+              <div class="terminal">
+                <div class="bg-pixel-dark/80 px-6 py-4 border-b border-pixel-gray/30 flex items-center justify-between">
+                  <span class="text-xs text-pixel-gray font-mono">terminal</span>
+                  <button onclick="copyCode('npx cnzr new my-app')" class="text-xs text-pixel-cyan hover:text-pixel-yellow transition-colors">Copy</button>
+                </div>
+                <div class="p-6">
+                  <code class="text-pixel-lime">npx cnzr new my-app</code><br>
+                  <code class="text-pixel-lime">cd my-app</code><br>
+                  <code class="text-pixel-lime">npm install</code><br>
+                  <code class="text-pixel-lime">npm run dev</code>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-pixel p-6 hover-lift">
+              <h3 class="text-lg font-bold text-pixel-yellow mb-3">Manual Installation</h3>
+              <div class="terminal">
+                <div class="bg-pixel-dark/80 px-6 py-4 border-b border-pixel-gray/30 flex items-center justify-between">
+                  <span class="text-xs text-pixel-gray font-mono">terminal</span>
+                  <button onclick="copyCode('npm install cnzr')" class="text-xs text-pixel-cyan hover:text-pixel-yellow transition-colors">Copy</button>
+                </div>
+                <div class="p-6">
+                  <code class="text-pixel-lime">npm install cnzr</code>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Quick Start -->
+        <section id="quickstart" class="mb-20 animate-on-scroll">
+          <h2 class="text-3xl font-bold text-pixel-cyan mb-6 flex items-center gap-3">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+            </svg>
+            Quick Start
+          </h2>
+          
+          <div class="card-pixel p-6 hover-lift">
+            <div class="terminal">
+              <div class="bg-pixel-dark/80 px-6 py-4 border-b border-pixel-gray/30 flex items-center justify-between">
+                <span class="text-xs text-pixel-gray font-mono">server.js</span>
+              </div>
+              <div class="p-6 overflow-x-auto">
+                <pre class="text-sm leading-relaxed"><code><span class="text-pixel-pink">import</span> { <span class="text-pixel-cyan">CenzeroApp</span> } <span class="text-pixel-pink">from</span> <span class="text-pixel-lime">'cnzr'</span>;
+
+<span class="text-pixel-pink">const</span> <span class="text-pixel-white">app</span> = <span class="text-pixel-pink">new</span> <span class="text-pixel-yellow">CenzeroApp</span>();
+
+<span class="text-pixel-gray">// Modern context-based handler</span>
+app.<span class="text-pixel-cyan">get</span>(<span class="text-pixel-lime">'/'</span>, (<span class="text-pixel-white">ctx</span>) => {
+  <span class="text-pixel-pink">return</span> ctx.<span class="text-pixel-yellow">json</span>({ <span class="text-pixel-cyan">message</span>: <span class="text-pixel-lime">'Hello CNZR!'</span> });
+});
+
+app.<span class="text-pixel-cyan">listen</span>(<span class="text-pixel-yellow">3000</span>);</code></pre>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- More sections would continue here with the same design pattern -->
+        
+      </main>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="border-t border-pixel-cyan/10 py-16 px-4 mt-20">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid md:grid-cols-4 gap-12 mb-12">
+        <div>
+          <div class="text-3xl font-bold text-pixel-cyan text-glow mb-4">CNZR</div>
+          <p class="text-sm text-pixel-gray leading-relaxed">
+            Modern Node.js framework for building exceptional web applications
+          </p>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-pixel-white mb-4 uppercase tracking-wider text-sm">Resources</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="/docs" class="text-pixel-gray hover:text-pixel-cyan transition-colors">Documentation</a></li>
+            <li><a href="/playground" class="text-pixel-gray hover:text-pixel-cyan transition-colors">Playground</a></li>
+            <li><a href="https://github.com/CenZero/cnzr" target="_blank" rel="noopener noreferrer" class="text-pixel-gray hover:text-pixel-cyan transition-colors">GitHub</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-pixel-white mb-4 uppercase tracking-wider text-sm">Community</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="/community" class="text-pixel-gray hover:text-pixel-cyan transition-colors">Community</a></li>
+            <li><a href="https://github.com/CenZero/cnzr/discussions" target="_blank" rel="noopener noreferrer" class="text-pixel-gray hover:text-pixel-cyan transition-colors">Discussions</a></li>
+            <li><a href="https://github.com/CenZero/cnzr" target="_blank" rel="noopener noreferrer" class="text-pixel-gray hover:text-pixel-cyan transition-colors">GitHub</a></li>
+          </ul>
+        </div>
+        
+        <div>
+          <h4 class="font-bold text-pixel-white mb-4 uppercase tracking-wider text-sm">Legal</h4>
+          <ul class="space-y-3 text-sm">
+            <li><a href="https://github.com/CenZero/cnzr/blob/main/LICENSE" target="_blank" rel="noopener noreferrer" class="text-pixel-gray hover:text-pixel-cyan transition-colors">MIT License</a></li>
+            <li><a href="/privacy" class="text-pixel-gray hover:text-pixel-cyan transition-colors">Privacy Policy</a></li>
+            <li><a href="/terms" class="text-pixel-gray hover:text-pixel-cyan transition-colors">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="border-t border-pixel-gray/20 pt-8 text-center">
+        <p class="text-sm text-pixel-gray flex items-center justify-center gap-2">
+          © 2024 CNZR Framework. Built with 
+          <svg class="w-4 h-4 text-pixel-pink" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M3.172 5.172a4 4 0 015.656 0L10 6.343l1.172-1.171a4 4 0 115.656 5.656L10 17.657l-6.828-6.829a4 4 0 010-5.656z" clip-rule="evenodd"/>
+          </svg>
+          by Muhammad Falih Afiq
+        </p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/app-motion.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,54 @@
+{
+  "name": "cnzr-full-framework",
+  "version": "2.0.0",
+  "description": "Complete CNZR Framework implementation with all features - Pixel art retro design",
+  "type": "module",
+  "scripts": {
+    "dev": "node server.cjs",
+    "build": "npm run build:css && node build-static.js",
+    "build:css": "tailwindcss -i ./public/styles.css -o ./public/output.css --minify",
+    "build:static": "node build-static.js",
+    "watch": "tailwindcss -i ./public/styles.css -o ./public/output.css --watch",
+    "start": "NODE_ENV=production node server.cjs",
+    "deploy": "npm run build && wrangler pages deploy dist",
+    "deploy:preview": "npm run build && wrangler pages deploy dist --branch=preview",
+    "test": "echo \"Tests coming soon\" && exit 0",
+    "lint": "eslint .",
+    "format": "prettier --write ."
+  },
+  "keywords": [
+    "cnzr",
+    "framework",
+    "nodejs",
+    "typescript",
+    "full-stack",
+    "pixel-art",
+    "retro",
+    "modern",
+    "api",
+    "rest",
+    "middleware",
+    "plugins",
+    "sessions",
+    "routing"
+  ],
+  "author": "Muhammad Falih Afiq (cenzer0)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CenZero/cnzr"
+  },
+  "devDependencies": {
+    "eslint": "^8.0.0",
+    "prettier": "^3.0.0",
+    "tailwindcss": "^3.4.0"
+  },
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "dependencies": {
+    "cnzr": "github:CenZero/cnzr",
+    "framer-motion": "^12.38.0"
+  }
+}
