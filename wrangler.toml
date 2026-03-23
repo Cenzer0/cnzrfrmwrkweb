@@ -9,7 +9,6 @@ directory = "./public"
 [vars]
 NODE_ENV = "production"
 
-# Custom domains (configure after deployment)
-# routes = [
-#   { pattern = "cnzr.dev", custom_domain = true }
-# ]
+routes = [
+  { pattern = "cnzr.biz.id", custom_domain = true }
+]
