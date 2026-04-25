@@ -4,7 +4,7 @@ const zlib = require('zlib');
 
 const app = new CenzeroApp({
   port: process.env.PORT || 3000,
-  host: process.env.HOST || 'localhost',
+  host: process.env.HOST || '0.0.0.0',
   staticDir: 'public',
   staticOptions: {
     maxAge: process.env.NODE_ENV === 'production' ? '1y' : 0,
